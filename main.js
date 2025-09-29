@@ -8,6 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
         todoscontainer.style.width = tasklist.children.length > 0 ? '100%' : '50%';
     }
 
+    const savetolocalstorage = () => {
+        const tasks = Array.from(tasklist.querySelectorAll('li').map(li => ({
+            text: li.querySelector('span').textContent,
+            completed: li.querySelector('.checkbox').checked
+        })));
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    const loadlocalstorage = () => {
+        const savedtasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        savedtasks.forEach(({text, completed}) => addtask(text, completed, false));
+        toggleemptyspace();
+        };
+
     const addtask = (event) => {
         event.preventDefault();
         const tasktext = taskinput.value.trim();
@@ -32,21 +46,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 taskinput.value = li.querySelector('span').textContent;
                 li.remove();
                 toggleemptyspace();
+                savetolocalstorage();
             }
         })
 
         li.querySelector('.delete-btn').addEventListener('click', () => {
             li.remove();
             toggleemptyspace();
+            savetolocalstorage();
         })
 
         tasklist.appendChild(li);
         taskinput.value = '';
+        toggleemptyspace();
+        savetolocalstorage();
     }
     addtaskbtn.addEventListener('click', addtask);
     taskinput.addEventListener('keypress', (e) => {
         if(e.key === 'Enter') {
             addtask(e)
         }
+
     })
+    loadlocalstorage();
 })
