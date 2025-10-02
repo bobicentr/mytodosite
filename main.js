@@ -23,8 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
     const addtask = (text, completed = false) => {
-        event.preventDefault();
-        const tasktext = taskinput.value.trim();
+        const tasktext = text || taskinput.value.trim();
         if (!tasktext) {
             return;
         }
@@ -76,10 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleemptyspace();
         savetolocalstorage();
     }
-    addtaskbtn.addEventListener('click', addtask);
+    addtaskbtn.addEventListener('click', () => addtask());
     taskinput.addEventListener('keypress', (e) => {
         if(e.key === 'Enter') {
-            addtask(e)
+            e.preventDefault()
+            addtask()
         }
 
     })
