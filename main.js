@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleemptyspace();
         };
 
-    const addtask = (event) => {
+    const addtask = (text, completed = false) => {
         event.preventDefault();
         const tasktext = taskinput.value.trim();
         if (!tasktext) {
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const li = document.createElement('li');
         li.innerHTML = `
-        <input type="checkbox" class="checkbox">
+        <input type="checkbox" class="checkbox" ${completed ? 'checked' : ''}/>
         <span>${tasktext}</span>
         <div class="task-buttons">
             <button class="edit-btn"><i class="fa-solid fa-pen></i>"</button>
@@ -40,6 +40,21 @@ document.addEventListener('DOMContentLoaded', () => {
         `
         const checkbox = li.querySelector('.checkbox');
         const editbtn = li.querySelector('.edit-btn');
+
+        if (completed) {
+            li.classList.add('completed')
+            editbtn.disabled = true
+            editbtn.style.opacity = '0.5'
+            editbtn.style.pointerEvents = 'none'
+        }
+
+        checkbox.addEventListener('change', () => {
+            const ischecked = checkbox.checked
+            li.classList.toggle('completed', ischecked)
+            editbtn.disabled = ischecked
+            editbtn.style.opacity = ischecked ? '0.5' : '1'
+            editbtn.style.pointerEvents = ischecked ? 'none' : 'auto' 
+        })
 
         editbtn.addEventListener('click', () => {
             if (!checkbox.checked) {
