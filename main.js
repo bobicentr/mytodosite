@@ -9,16 +9,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const savetolocalstorage = () => {
-        const tasks = Array.from(tasklist.querySelectorAll('li').map(li => ({
+        const tasks = Array.from(tasklist.querySelectorAll('li')).map(li => ({
             text: li.querySelector('span').textContent,
             completed: li.querySelector('.checkbox').checked
-        })));
+        }));
         localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 
     const loadlocalstorage = () => {
         const savedtasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        savedtasks.forEach(({text, completed}) => addtask(text, completed, false));
+        savedtasks.forEach(({ text, completed }) => addtask(text, completed, false));
         toggleemptyspace();
         };
 
@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             editbtn.disabled = ischecked
             editbtn.style.opacity = ischecked ? '0.5' : '1'
             editbtn.style.pointerEvents = ischecked ? 'none' : 'auto' 
+            savetolocalstorage();
         })
 
         editbtn.addEventListener('click', () => {
@@ -81,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault()
             addtask()
         }
-
     })
+
     loadlocalstorage();
 })
